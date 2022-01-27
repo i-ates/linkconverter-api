@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"github.com/labstack/echo/v4"
 	"linkconverter-api/services"
 	"net/http"
@@ -19,16 +18,12 @@ type DeepToUrlRouter struct {
 // responses:
 //	200: DeepToUrlResponseModel
 func (deepToUrlRouter *DeepToUrlRouter) DeepToUrl(context echo.Context) error {
-	jsonMap := make(map[string]interface{})
-	err := json.NewDecoder(context.Request().Body).Decode(&jsonMap)
+
+	response, err := deepToUrlRouter.linkConverterService.ConvertDeepToUrl(context)
 
 	if err != nil {
-		return err
+		return context.JSON(http.StatusBadRequest, nil)
 	}
-
-	url := jsonMap["url"].(string) //bu burda mı olmalı bilemedim ilerde farklı bir field geldiğinde işimiz karışır
-
-	response := deepToUrlRouter.linkConverterService.ConvertDeepToUrl(url)
 
 	return context.JSON(http.StatusOK, response)
 }

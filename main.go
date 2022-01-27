@@ -55,8 +55,6 @@ func SetupRouter(container dig.Container) *echo.Echo {
 
 	var api = echo.New()
 
-	api.File("/favicon.ico", "")
-
 	err := container.Invoke(func(
 		statusRouter routes.StatusRouterInterface,
 		urlToDeepRouter routes.UrlToDeepRouterInterface,
