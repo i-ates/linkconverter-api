@@ -20,6 +20,7 @@ import (
 	"go.uber.org/dig"
 	"linkconverter-api/helpers"
 	"linkconverter-api/routes"
+	"linkconverter-api/services"
 )
 
 func main() {
@@ -43,6 +44,9 @@ func BuildContainer() *dig.Container {
 
 	_ = container.Provide(helpers.NewConfig)
 	_ = container.Provide(routes.NewStatusRouter)
+	_ = container.Provide(routes.NewDeepToUrlRouter)
+	_ = container.Provide(routes.NewUrlToDeepRouter)
+	_ = container.Provide(services.NewLinkConverterService)
 
 	return container
 }
@@ -55,8 +59,12 @@ func SetupRouter(container dig.Container) *echo.Echo {
 
 	err := container.Invoke(func(
 		statusRouter routes.StatusRouterInterface,
+		urlToDeepRouter routes.UrlToDeepRouterInterface,
+		deepToUrlRouter routes.DeepToUrlRouterInterface,
 	) {
 		api.GET("/status", statusRouter.Status)
+		api.POST("/urltodeep", urlToDeepRouter.UrlToDeep)
+		api.POST("deeptourl", deepToUrlRouter.DeepToUrl)
 	})
 
 	api.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{}))

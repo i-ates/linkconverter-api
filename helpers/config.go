@@ -29,7 +29,7 @@ func NewConfig() Config {
 
 	defer configFile.Close()
 
-	log.Println("Config loaded environment")
+	log.Printf("Config loaded environment: %s\n", LinkConverterEnv)
 
 	return config
 }
