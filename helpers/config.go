@@ -3,9 +3,7 @@ package helpers
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
-	"linkconverter-api/libs/logging"
-	"linkconverter-api/libs/runtimeenvironment"
+	"log"
 	"os"
 )
 
@@ -16,14 +14,14 @@ type Config struct {
 func NewConfig() Config {
 	var config Config
 
-	var LinkConverterEnv = runtimeenvironment.Environment
+	var LinkConverterEnv = Environment
 
 	configFilePath := fmt.Sprintf("configs/appconfig.%s.json", LinkConverterEnv)
 
 	configFile, err := os.Open(configFilePath)
 
 	if err != nil {
-		logging.Fatal("Config File could not open", zap.Error(err))
+		log.Fatal("Config File could not open!")
 	}
 
 	jsonParser := json.NewDecoder(configFile)
@@ -31,11 +29,11 @@ func NewConfig() Config {
 
 	defer configFile.Close()
 
-	logging.Info("Config loaded environment")
+	log.Println("Config loaded environment")
 
 	return config
 }
 
 func GetAppName() string {
-	return fmt.Sprintf("%s-%s", AppName, runtimeenvironment.Environment)
+	return fmt.Sprintf("%s-%s", AppName, Environment)
 }
