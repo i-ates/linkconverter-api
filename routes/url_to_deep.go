@@ -18,7 +18,7 @@ type UrlToDeepRouter struct {
 // responses:
 //	200: UrlToDeepResponseModel
 func (urlToDeepRouter *UrlToDeepRouter) UrlToDeep(context echo.Context) error {
-	response, err := urlToDeepRouter.linkConverterService.ConvertDeepToUrl(context)
+	response, err := urlToDeepRouter.linkConverterService.ConvertUrlToDeep(context)
 
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, nil)
