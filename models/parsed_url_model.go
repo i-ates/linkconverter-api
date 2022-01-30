@@ -1,11 +1,12 @@
 package models
 
 type ParsedUrlModel struct {
-	BrandOrCategoryName string
-	ProductName         string
-	ContentId           int
-	BoutiqueId          int
-	merchantId          int
+	PageType   string
+	UrlType    string
+	Q          string
+	ContentId  string
+	BoutiqueId string
+	MerchantId string
 }
 
 func NewParsedUrlModel() ParsedUrlModel {

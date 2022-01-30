@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
+	"linkconverter-api/models/requests"
 	"linkconverter-api/services"
 	"net/http"
 )
@@ -15,13 +16,21 @@ type UrlToDeepRouter struct {
 }
 
 func (urlToDeepRouter *UrlToDeepRouter) UrlToDeep(context echo.Context) error {
-	response, err := urlToDeepRouter.linkConverterService.ConvertUrlToDeep(context)
+	urlRequestModel := requests.UrlRequestModel{}
+
+	err := context.Bind(&urlRequestModel)
 
 	if err != nil {
-		return context.JSON(http.StatusBadRequest, nil)
+		return context.JSON(http.StatusBadRequest, err)
 	}
 
-	return context.JSON(http.StatusOK, response)
+	urlToDeepResponseModel, err := urlToDeepRouter.linkConverterService.ConvertUrlToDeep(urlRequestModel)
+
+	if err != nil {
+		return context.JSON(http.StatusBadRequest, err)
+	}
+
+	return context.JSON(http.StatusOK, urlToDeepResponseModel)
 }
 
 func NewUrlToDeepRouter(linkConverterService services.LinkConverterServiceInterface) UrlToDeepRouterInterface {

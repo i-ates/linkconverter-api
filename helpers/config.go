@@ -14,9 +14,7 @@ type Config struct {
 func NewConfig() Config {
 	var config Config
 
-	var LinkConverterEnv = Environment
-
-	configFilePath := fmt.Sprintf("configs/appconfig.%s.json", LinkConverterEnv)
+	configFilePath := fmt.Sprintf("configs/appconfig.json")
 
 	configFile, err := os.Open(configFilePath)
 
@@ -29,11 +27,7 @@ func NewConfig() Config {
 
 	defer configFile.Close()
 
-	log.Printf("Config loaded environment: %s\n", LinkConverterEnv)
+	log.Printf("Config loaded")
 
 	return config
-}
-
-func GetAppName() string {
-	return fmt.Sprintf("%s-%s", AppName, Environment)
 }

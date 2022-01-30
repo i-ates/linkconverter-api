@@ -1,59 +1,167 @@
 package parsers
 
 import (
+	"errors"
+	"linkconverter-api/helpers"
 	"linkconverter-api/models"
-	"log"
+	"linkconverter-api/models/requests"
 	Url "net/url"
-	"strconv"
+	"regexp"
 	"strings"
 )
 
 type UrlParserInterface interface {
-	Parse(url string, pageType string) models.ParsedUrlModel
+	Parse(urlRequestModel requests.UrlRequestModel) (models.ParsedUrlModel, error)
 }
 
 type UrlParser struct {
 }
 
-func (urlParser *UrlParser) Parse(url string, pageType string) models.ParsedUrlModel {
-	model := models.NewParsedUrlModel()
+func (urlParser *UrlParser) Parse(urlRequestModel requests.UrlRequestModel) (models.ParsedUrlModel, error) {
+	parsedUrlModel := models.NewParsedUrlModel()
 
-	parsedUrl, _ := Url.Parse(url)
-
-	if pageType == "ProductDetail" {
-		urlParser.ParseProductDetailPage(*parsedUrl, &model)
+	parsedUrl, err := Url.Parse(urlRequestModel.Url)
+	if err != nil {
+		return parsedUrlModel, err
 	}
 
-	return model
+	parsedUrlModel.UrlType, err = urlParser.GetUrlType(parsedUrl.Scheme)
+	if err != nil {
+		return parsedUrlModel, err
+	}
+
+	parsedUrlModel.PageType, err = urlParser.GetPageType(urlRequestModel.Url, parsedUrlModel.UrlType)
+	if err != nil {
+		return parsedUrlModel, err
+	}
+
+	urlParser.GetUrlUrlValues(&parsedUrlModel, parsedUrl)
+
+	return parsedUrlModel, nil
 
 }
 
-func (urlParser *UrlParser) ParseProductDetailPage(parsedUrl Url.URL, parsedUrlModel *models.ParsedUrlModel) {
-	pathSplinted := strings.Split(parsedUrl.Path, "/")
-	productNameAndContentId := strings.Split(pathSplinted[2], "-p-")
+func (urlParser *UrlParser) GetUrlType(scheme string) (string, error) {
+	if strings.Contains(scheme, helpers.DeepLinkScheme) {
+		return helpers.DeeplinkUrlType, nil
+	}
 
-	brandOrCategoryName := pathSplinted[1]
-	productName := productNameAndContentId[0]
-	contentId := productNameAndContentId[1]
+	if strings.Contains(scheme, helpers.UrlScheme) {
+		return helpers.UrlUrlType, nil
+	}
 
-	parsedUrlModel.BrandOrCategoryName = brandOrCategoryName
-	parsedUrlModel.ProductName = productName
-	parsedUrlModel.ContentId, _ = strconv.Atoi(contentId)
+	return helpers.NoneUrlType, errors.New("url type is not correct")
+}
 
-	if parsedUrl.RawQuery != "" {
-		rawQuerySplinted := strings.Split(parsedUrl.RawQuery, "&")
-		if len(rawQuerySplinted) > 0 {
-			rawQueryMap := make(map[string]int)
-			for i := 0; i < len(rawQuerySplinted); i++ {
-				rawQueryElementSplinted := strings.Split(rawQuerySplinted[i], "=")
-				rawQueryMap[rawQueryElementSplinted[0]], _ = strconv.Atoi(rawQueryElementSplinted[1])
-			}
-			//mapledikten sonra if elssiz model ile eşleştirme yapılır mı bilemedim
+func (urlParser UrlParser) GetPageType(url string, urlType string) (string, error) {
+	if urlType == helpers.UrlUrlType {
+		return urlParser.GetPageTypeForUrl(url)
+	}
+	if urlType == helpers.DeeplinkUrlType {
+		return urlParser.GetPageTypeForDeepLink(url)
+	}
 
+	return helpers.NonePageType, errors.New("url page type is invalid")
+
+}
+
+func (urlParser UrlParser) GetPageTypeForUrl(url string) (string, error) {
+	r, _ := regexp.Compile(helpers.UrlProductDetailPageRegex)
+	matched := r.MatchString(url)
+
+	if matched {
+		return helpers.ProductDetailPageType, nil
+	}
+	r, _ = regexp.Compile(helpers.UrlSearchPageRegex)
+	matched = r.MatchString(url)
+
+	if matched {
+		return helpers.SearchPagePageType, nil
+	}
+
+	r, _ = regexp.Compile(helpers.UrlOtherPagesRegex)
+	matched = r.MatchString(url)
+
+	if matched {
+		return helpers.OtherPagesPageType, nil
+	}
+	return helpers.NonePageType, errors.New("url pageType is invalid")
+
+}
+
+func (urlParser UrlParser) GetPageTypeForDeepLink(url string) (string, error) {
+	r, _ := regexp.Compile(helpers.DeepLinkProductDetailPageRegex)
+	matched := r.MatchString(url)
+
+	if matched {
+		return helpers.ProductDetailPageType, nil
+	}
+	r, _ = regexp.Compile(helpers.DeepLinkSearchPageRegex)
+	matched = r.MatchString(url)
+
+	if matched {
+		return helpers.SearchPagePageType, nil
+	}
+
+	r, _ = regexp.Compile(helpers.DeepLinkOtherPagesRegex)
+	matched = r.MatchString(url)
+
+	if matched {
+		return helpers.OtherPagesPageType, nil
+	}
+	return helpers.NonePageType, errors.New("url pageType is not valid")
+
+}
+
+func (urlParser UrlParser) GetUrlValues(parsedUrlModel models.ParsedUrlModel, parsedUrl *Url.URL) {
+	if parsedUrlModel.UrlType == helpers.UrlUrlType {
+		urlParser.GetUrlUrlValues(&parsedUrlModel, parsedUrl)
+	}
+
+	if parsedUrlModel.UrlType == helpers.DeeplinkUrlType {
+		urlParser.GetDeepLinkValues(&parsedUrlModel, parsedUrl)
+	}
+}
+
+func (urlParser UrlParser) GetUrlUrlValues(parsedUrlModel *models.ParsedUrlModel, parsedUrl *Url.URL) {
+	if parsedUrlModel.PageType == helpers.ProductDetailPageType {
+		sPath := strings.Split(parsedUrl.Path, "-")
+		parsedUrlModel.ContentId = sPath[len(sPath)-1]
+
+		if boutiqueId, ok := parsedUrl.Query()[helpers.UrlBoutiqueIdParamKey]; ok {
+			parsedUrlModel.BoutiqueId = strings.Join(boutiqueId, "")
+		}
+
+		if merchantId, ok := parsedUrl.Query()[helpers.UrlMerchantIdParamKey]; ok {
+			parsedUrlModel.MerchantId = strings.Join(merchantId, "")
 		}
 	}
-	log.Fatal("x")
 
+	if parsedUrlModel.PageType == helpers.SearchPagePageType {
+		if q, ok := parsedUrl.Query()[helpers.UrlProductQueryParamKey]; ok {
+			parsedUrlModel.Q = strings.Join(q, "")
+		}
+	}
+}
+
+func (urlParser *UrlParser) GetDeepLinkValues(parsedUrlModel *models.ParsedUrlModel, parsedUrl *Url.URL) {
+	if parsedUrlModel.PageType == helpers.SearchPagePageType {
+		if q, ok := parsedUrl.Query()[helpers.DeepLinkQueryParamKey]; ok {
+			parsedUrlModel.Q = strings.Join(q, "")
+		}
+	}
+
+	if parsedUrlModel.PageType == helpers.ProductDetailPageType {
+		if q, ok := parsedUrl.Query()[helpers.DeepLinkContentIdParamKey]; ok {
+			parsedUrlModel.ContentId = strings.Join(q, "")
+		}
+		if q, ok := parsedUrl.Query()[helpers.DeepLinkCampaignIdParamKey]; ok {
+			parsedUrlModel.BoutiqueId = strings.Join(q, "")
+		}
+		if q, ok := parsedUrl.Query()[helpers.DeepLinkMerchantIdParamKey]; ok {
+			parsedUrlModel.MerchantId = strings.Join(q, "")
+		}
+	}
 }
 
 func NewUrlParser() UrlParserInterface {
