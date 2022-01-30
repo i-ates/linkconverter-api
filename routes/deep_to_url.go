@@ -14,9 +14,6 @@ type DeepToUrlRouter struct {
 	linkConverterService services.LinkConverterServiceInterface
 }
 
-// swagger:route POST /deepToUrl DeepToUrl postUrlLink
-// responses:
-//	200: DeepToUrlResponseModel
 func (deepToUrlRouter *DeepToUrlRouter) DeepToUrl(context echo.Context) error {
 
 	response, err := deepToUrlRouter.linkConverterService.ConvertDeepToUrl(context)

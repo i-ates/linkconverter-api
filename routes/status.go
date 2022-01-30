@@ -13,9 +13,6 @@ type StatusRouterInterface interface {
 type StatusRouter struct {
 }
 
-// swagger:route GET /status Status getStatus
-// responses:
-//	200: StatusResponseModel
 func (statusRouter *StatusRouter) Status(context echo.Context) error {
 	responseModel := responses.StatusResponseModel{
 		Status:      true,
