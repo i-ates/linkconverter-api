@@ -19,6 +19,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/dig"
 	"linkconverter-api/helpers"
+	"linkconverter-api/parsers"
 	"linkconverter-api/routes"
 	"linkconverter-api/services"
 )
@@ -47,6 +48,7 @@ func BuildContainer() *dig.Container {
 	_ = container.Provide(routes.NewDeepToUrlRouter)
 	_ = container.Provide(routes.NewUrlToDeepRouter)
 	_ = container.Provide(services.NewLinkConverterService)
+	_ = container.Provide(parsers.NewUrlParser)
 
 	return container
 }

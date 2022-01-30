@@ -7,8 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"linkconverter-api/helpers"
 	"linkconverter-api/models/responses"
+	"linkconverter-api/parsers"
 	"regexp"
-	"strings"
 )
 
 type LinkConverterServiceInterface interface {
@@ -17,6 +17,7 @@ type LinkConverterServiceInterface interface {
 }
 
 type LinkConverterService struct {
+	urlParser parsers.UrlParserInterface
 }
 
 func (linkConverterService LinkConverterService) ConvertDeepToUrl(context echo.Context) (responses.DeepToUrlResponseModel, error) {
@@ -92,11 +93,13 @@ func (linkConverterService LinkConverterService) isUrlValidAndGetPageType(url st
 }
 
 func (linkConverterService LinkConverterService) convertUrl(url string, pageType string) string {
-	//ağlıyacam hard coded yapıyom ben davarım.
-	trimmedString := strings.ReplaceAll(url, "https://www.trendyol.com/", "")
-	return trimmedString
+	u := linkConverterService.urlParser.Parse(url, pageType)
+	return u.BrandOrCategoryName
+
 }
 
-func NewLinkConverterService() LinkConverterServiceInterface {
-	return &LinkConverterService{}
+func NewLinkConverterService(urlParser parsers.UrlParserInterface) LinkConverterServiceInterface {
+	return &LinkConverterService{
+		urlParser: urlParser,
+	}
 }
