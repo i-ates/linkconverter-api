@@ -19,7 +19,7 @@ func NewConfig() Config {
 	configFile, err := os.Open(configFilePath)
 
 	if err != nil {
-		log.Fatal("Config File could not open!")
+		log.Fatal("Config File could not open")
 	}
 
 	jsonParser := json.NewDecoder(configFile)

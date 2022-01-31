@@ -1,7 +1,9 @@
 package services
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"linkconverter-api/builders"
+	"linkconverter-api/models"
 	"linkconverter-api/models/requests"
 	"linkconverter-api/models/responses"
 	"linkconverter-api/parsers"
@@ -15,6 +17,7 @@ type LinkConverterServiceInterface interface {
 type LinkConverterService struct {
 	urlParser  parsers.UrlParserInterface
 	urlBuilder builders.UrlBuilderInterface
+	dbBuilder  builders.DbBuilderInterface
 }
 
 func (linkConverterService LinkConverterService) ConvertDeepToUrl(deepLinkRequestModel requests.DeepLinkRequestModel) (responses.DeepToUrlResponseModel, error) {
@@ -23,10 +26,13 @@ func (linkConverterService LinkConverterService) ConvertDeepToUrl(deepLinkReques
 	parsedUrlModel, err := linkConverterService.urlParser.Parse(deepLinkRequestModel.DeepLink)
 
 	if err != nil {
+		linkConverterService.dbBuilder.InsertLogEvent(linkConverterService.dbBuilder.GetDb(), models.NewEvent(deepLinkRequestModel.DeepLink, ""))
 		return deepToUrlResponseModel, err
 	}
 
 	linkConverterService.urlBuilder.BuildUrlUrl(&deepToUrlResponseModel, parsedUrlModel)
+
+	linkConverterService.dbBuilder.InsertLogEvent(linkConverterService.dbBuilder.GetDb(), models.NewEvent(deepLinkRequestModel.DeepLink, deepToUrlResponseModel.Url))
 
 	return deepToUrlResponseModel, nil
 }
@@ -45,9 +51,11 @@ func (linkConverterService LinkConverterService) ConvertUrlToDeep(urlRequestMode
 	return urlToDeepResponseModel, nil
 }
 
-func NewLinkConverterService(urlParser parsers.UrlParserInterface, urlBuilder builders.UrlBuilderInterface) LinkConverterServiceInterface {
+func NewLinkConverterService(urlParser parsers.UrlParserInterface, urlBuilder builders.UrlBuilderInterface,
+	dbBuilder builders.DbBuilderInterface) LinkConverterServiceInterface {
 	return &LinkConverterService{
 		urlParser:  urlParser,
 		urlBuilder: urlBuilder,
+		dbBuilder:  dbBuilder,
 	}
 }

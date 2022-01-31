@@ -36,6 +36,7 @@ func BuildContainer() *dig.Container {
 	_ = container.Provide(services.NewLinkConverterService)
 	_ = container.Provide(parsers.NewUrlParser)
 	_ = container.Provide(builders.NewUrlBuilder)
+	_ = container.Provide(builders.NewDbBuilder)
 
 	return container
 }

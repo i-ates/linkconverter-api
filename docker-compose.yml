@@ -15,10 +15,10 @@ services:
     image: mysql:5.7.22
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_database: linkconverter_mysql
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_database: "linkconverter_mysql"
     ports:
       - "3307:3306"
     volumes:
