@@ -83,16 +83,6 @@ var urlCases = []struct {
 		},
 		err: nil,
 	},
-	{
-		urlRequestModel: requests.UrlRequestModel{
-			Url: "https://www.trendyol.com/Hesabim/#/Siparislerim",
-		},
-		parsedUrlModel: models.ParsedUrlModel{
-			PageType: helpers.OtherPagesPageType,
-			UrlType:  helpers.UrlUrlType,
-		},
-		err: nil,
-	},
 }
 
 var deepLinkCases = []struct {
@@ -162,16 +152,6 @@ var deepLinkCases = []struct {
 	{
 		deepLinkRequestModel: requests.DeepLinkRequestModel{
 			DeepLink: "ty://?Page=Favorites",
-		},
-		parsedUrlModel: models.ParsedUrlModel{
-			PageType: helpers.OtherPagesPageType,
-			UrlType:  helpers.DeeplinkUrlType,
-		},
-		err: nil,
-	},
-	{
-		deepLinkRequestModel: requests.DeepLinkRequestModel{
-			DeepLink: "ty://?Page=Orders",
 		},
 		parsedUrlModel: models.ParsedUrlModel{
 			PageType: helpers.OtherPagesPageType,

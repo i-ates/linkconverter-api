@@ -23,15 +23,30 @@ func (urlBuilder UrlBuilder) BuildUrlUrl(deepToUrlResponseModel *responses.DeepT
 	if parsedUrlModel.PageType == helpers.SearchPagePageType {
 		urlUrl = urlUrl + helpers.UrlSearchPageParamKey
 	}
+	if parsedUrlModel.PageType == helpers.OtherPagesPageType {
+		deepToUrlResponseModel.Url = urlUrl
+		return
+	}
+	anyParamAdded := false
 
 	if parsedUrlModel.ContentId != "" {
-		urlUrl = parsedUrlModel.ContentId + "?"
+		urlUrl = urlUrl + parsedUrlModel.ContentId + "?"
 	}
 	if parsedUrlModel.BoutiqueId != "" {
 		urlUrl = urlUrl + helpers.UrlBoutiqueIdParamKey + "=" + parsedUrlModel.BoutiqueId
+		anyParamAdded = true
 	}
 	if parsedUrlModel.MerchantId != "" {
-		urlUrl = urlUrl + "&" + helpers.UrlMerchantIdParamKey + "=" + parsedUrlModel.MerchantId
+		if anyParamAdded {
+			urlUrl = urlUrl + "&" + helpers.UrlMerchantIdParamKey + "=" + parsedUrlModel.MerchantId
+		} else {
+			urlUrl = urlUrl + helpers.UrlMerchantIdParamKey + "=" + parsedUrlModel.MerchantId
+
+		}
+		anyParamAdded = true
+	}
+	if !anyParamAdded {
+		urlUrl = urlUrl[:len(urlUrl)-1]
 	}
 	if parsedUrlModel.Q != "" {
 		urlUrl = urlUrl + "?" + helpers.UrlProductQueryParamKey + "=" + Url.QueryEscape(parsedUrlModel.Q)
