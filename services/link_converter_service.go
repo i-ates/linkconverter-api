@@ -8,7 +8,7 @@ import (
 )
 
 type LinkConverterServiceInterface interface {
-	ConvertDeepToUrl(urlRequestModel requests.UrlRequestModel) (responses.DeepToUrlResponseModel, error)
+	ConvertDeepToUrl(deepLinkRequestModel requests.DeepLinkRequestModel) (responses.DeepToUrlResponseModel, error)
 	ConvertUrlToDeep(urlRequestModel requests.UrlRequestModel) (responses.UrlToDeepResponseModel, error)
 }
 
@@ -17,10 +17,10 @@ type LinkConverterService struct {
 	urlBuilder builders.UrlBuilderInterface
 }
 
-func (linkConverterService LinkConverterService) ConvertDeepToUrl(urlRequestModel requests.UrlRequestModel) (responses.DeepToUrlResponseModel, error) {
+func (linkConverterService LinkConverterService) ConvertDeepToUrl(deepLinkRequestModel requests.DeepLinkRequestModel) (responses.DeepToUrlResponseModel, error) {
 	deepToUrlResponseModel := responses.DeepToUrlResponseModel{}
 
-	parsedUrlModel, err := linkConverterService.urlParser.Parse(urlRequestModel)
+	parsedUrlModel, err := linkConverterService.urlParser.Parse(deepLinkRequestModel.DeepLink)
 
 	if err != nil {
 		return deepToUrlResponseModel, err
@@ -34,7 +34,7 @@ func (linkConverterService LinkConverterService) ConvertDeepToUrl(urlRequestMode
 func (linkConverterService LinkConverterService) ConvertUrlToDeep(urlRequestModel requests.UrlRequestModel) (responses.UrlToDeepResponseModel, error) {
 	urlToDeepResponseModel := responses.UrlToDeepResponseModel{}
 
-	parsedUrlModel, err := linkConverterService.urlParser.Parse(urlRequestModel)
+	parsedUrlModel, err := linkConverterService.urlParser.Parse(urlRequestModel.Url)
 
 	if err != nil {
 		return urlToDeepResponseModel, err

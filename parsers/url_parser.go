@@ -4,23 +4,22 @@ import (
 	"errors"
 	"linkconverter-api/helpers"
 	"linkconverter-api/models"
-	"linkconverter-api/models/requests"
 	Url "net/url"
 	"regexp"
 	"strings"
 )
 
 type UrlParserInterface interface {
-	Parse(urlRequestModel requests.UrlRequestModel) (models.ParsedUrlModel, error)
+	Parse(url string) (models.ParsedUrlModel, error)
 }
 
 type UrlParser struct {
 }
 
-func (urlParser *UrlParser) Parse(urlRequestModel requests.UrlRequestModel) (models.ParsedUrlModel, error) {
+func (urlParser *UrlParser) Parse(url string) (models.ParsedUrlModel, error) {
 	parsedUrlModel := models.NewParsedUrlModel()
 
-	parsedUrl, err := Url.Parse(urlRequestModel.Url)
+	parsedUrl, err := Url.Parse(url)
 	if err != nil {
 		return parsedUrlModel, err
 	}
@@ -30,12 +29,18 @@ func (urlParser *UrlParser) Parse(urlRequestModel requests.UrlRequestModel) (mod
 		return parsedUrlModel, err
 	}
 
-	parsedUrlModel.PageType, err = urlParser.GetPageType(urlRequestModel.Url, parsedUrlModel.UrlType)
+	parsedUrlModel.PageType, err = urlParser.GetPageType(url, parsedUrlModel.UrlType)
 	if err != nil {
 		return parsedUrlModel, err
 	}
 
-	urlParser.GetUrlUrlValues(&parsedUrlModel, parsedUrl)
+	if parsedUrlModel.UrlType == helpers.UrlUrlType {
+		urlParser.GetUrlUrlValues(&parsedUrlModel, parsedUrl)
+
+	}
+	if parsedUrlModel.UrlType == helpers.DeeplinkUrlType {
+		urlParser.GetDeepLinkValues(&parsedUrlModel, parsedUrl)
+	}
 
 	return parsedUrlModel, nil
 

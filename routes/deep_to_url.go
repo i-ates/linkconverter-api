@@ -17,15 +17,15 @@ type DeepToUrlRouter struct {
 
 func (deepToUrlRouter *DeepToUrlRouter) DeepToUrl(context echo.Context) error {
 
-	urlRequestModel := requests.UrlRequestModel{}
+	deepLinkRequestModel := requests.DeepLinkRequestModel{}
 
-	err := context.Bind(&urlRequestModel)
+	err := context.Bind(&deepLinkRequestModel)
 
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, err)
 	}
 
-	deepToUrlResponseModel, err := deepToUrlRouter.linkConverterService.ConvertDeepToUrl(urlRequestModel)
+	deepToUrlResponseModel, err := deepToUrlRouter.linkConverterService.ConvertDeepToUrl(deepLinkRequestModel)
 
 	if err != nil {
 		return context.JSON(http.StatusBadRequest, err)
