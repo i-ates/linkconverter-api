@@ -48,7 +48,7 @@ Logs table look like:
 
 ![](data/ex_table.jpeg)
 
-##Want To Do
+## Want To Do
 * Improve the using of database connector in project. (Now for every request, dbBuilder connect to database and try to 
 create log table then insert the log event.)
 * Add edge cases for unit tests.
