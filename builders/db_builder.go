@@ -10,23 +10,21 @@ import (
 
 type DbBuilderInterface interface {
 	DbConnection() (*sql.DB, error)
-	InsertLogEvent(db *sql.DB, logEvent models.LogEventModel) error
-	GetDb() *sql.DB
+	InsertLogEvent(logEvent models.LogEventModel) error
 }
 
 type DbBuilder struct {
-	db *sql.DB
 }
 
 func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:root@tcp(db:3306)/linkconverterapi")
+	db, err := sql.Open("mysql", "root:root@tcp(db:3306)/mysql")
 	if err != nil {
 		log.Fatal("Error %s when opening db", err)
 	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
-	res, err := db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+"linkconverterapi")
+	res, err := db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+"mysql")
 	if err != nil {
 		log.Printf("Error %s when creating DB\n", err)
 		return nil, err
@@ -39,7 +37,7 @@ func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
 	log.Printf("rows affected %d\n", no)
 
 	db.Close()
-	db, err = sql.Open("mysql", "root:root@tcp(db:3306)/linkconverterapi")
+	db, err = sql.Open("mysql", "root:root@tcp(db:3306)/mysql")
 	if err != nil {
 		log.Printf("Error %s when opening DB", err)
 		return nil, err
@@ -63,7 +61,6 @@ func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	dbBuilder.db = db
 	return db, nil
 }
 
@@ -86,8 +83,8 @@ func (dbBuilder *DbBuilder) CreateLogsTable(db *sql.DB) error {
 	return nil
 }
 
-func (dbBuilder *DbBuilder) InsertLogEvent(db *sql.DB, logEvent models.LogEventModel) error {
-	_, err := dbBuilder.DbConnection()
+func (dbBuilder *DbBuilder) InsertLogEvent(logEvent models.LogEventModel) error {
+	db, err := dbBuilder.DbConnection()
 	if err != nil {
 		return err
 	}
@@ -115,7 +112,4 @@ func (dbBuilder *DbBuilder) InsertLogEvent(db *sql.DB, logEvent models.LogEventM
 }
 func NewDbBuilder() DbBuilderInterface {
 	return &DbBuilder{}
-}
-func (dbBuilder *DbBuilder) GetDb() *sql.DB {
-	return dbBuilder.db
 }
