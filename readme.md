@@ -53,4 +53,4 @@ Logs table look like:
 create log table then insert the log event.)
 * Add edge cases for unit tests.
 * Improve the coverage of unit tests.
-* Add routes, services and dbBuilder unit tests.
+* Add routes, services and dbBuilder unit tests with mocking.
