@@ -14,7 +14,7 @@ $ go build main.go
 $ ./main
 ```
 Notice: If you run project manually you can't log the requests in database.
-Database run with same docker container with api.
+Database run in same docker container with api.
 ### Run Unit Tests
 
 ```bash
