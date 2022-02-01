@@ -1,0 +1,473 @@
+{
+	"info": {
+		"_postman_id": "e9f4b024-22d3-4f87-ad82-86c4c094acb3",
+		"name": "LinkConverter-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "URL PAGE  C",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/casio/saat-p-1925865\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL PAGE  C&M",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/casio/saat-p-1925865?&merchantId=105064\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL PAGE  C&B",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/casio/saat-p-1925865?boutiqueId=439892\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL PAGE  C&B&M",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/casio/saat-p-1925865?boutiqueId=439892&merchantId=105064\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL SEARCH q=elbise",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/sr?q=elbise\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL SEARCH q=%C3&BCt%C3%BC",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/sr?q=%C3&BCt%C3%BC\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL OTHER 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/Hesabim/#/Favoriler\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "URL OTHER 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.trendyol.com/Hesabim/#/Siparislerim\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL PAGE C",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Product&ContentId=1925865\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL PAGE C&M",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Product&ContentId=1925865&MerchantId=105064\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL PAGE C&C",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Product&ContentId=1925865&CampaignId=439892\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL PAGE C&C&M",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Product&ContentId=1925865&CampaignId=439892&MerchantId=105064\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL SEARCH q=elbise",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Search&Query=elbise\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL SEARCH q=%C3%BCt%C3%BC",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Search&Query=%C3%BCt%C3%BC\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL OTHER 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Favorites\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DL OTHER 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"ty://?Page=Orders\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:2626/urltodeep",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2626",
+					"path": [
+						"urltodeep"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

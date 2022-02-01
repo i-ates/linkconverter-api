@@ -19,25 +19,24 @@ type DbBuilder struct {
 func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
 	db, err := sql.Open("mysql", "root:root@tcp(db:3306)/mysql")
 	if err != nil {
-		log.Fatal("Error %s when opening db", err)
+		log.Printf("Error %s when opening db", err)
 	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
-	res, err := db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+"mysql")
+	res, err := db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+"my_scheme")
 	if err != nil {
 		log.Printf("Error %s when creating DB\n", err)
 		return nil, err
 	}
-	no, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	if err != nil {
 		log.Printf("Error %s when fetching rows", err)
 		return nil, err
 	}
-	log.Printf("rows affected %d\n", no)
 
 	db.Close()
-	db, err = sql.Open("mysql", "root:root@tcp(db:3306)/mysql")
+	db, err = sql.Open("mysql", "root:root@tcp(db:3306)/my_scheme")
 	if err != nil {
 		log.Printf("Error %s when opening DB", err)
 		return nil, err
@@ -55,7 +54,6 @@ func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
 		log.Printf("Errors %s pinging DB", err)
 		return nil, err
 	}
-	log.Printf("Connected to DB %s successfully\n", "linkconverterapi")
 
 	err = dbBuilder.CreateLogsTable(db)
 	if err != nil {
@@ -74,12 +72,11 @@ func (dbBuilder *DbBuilder) CreateLogsTable(db *sql.DB) error {
 		log.Printf("Error %s when creating product table", err)
 		return err
 	}
-	rows, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	if err != nil {
 		log.Printf("Error %s when getting rows affected", err)
 		return err
 	}
-	log.Printf("Rows affected when creating table: %d", rows)
 	return nil
 }
 
@@ -102,12 +99,12 @@ func (dbBuilder *DbBuilder) InsertLogEvent(logEvent models.LogEventModel) error 
 		log.Printf("Error %s when inserting row into products table", err)
 		return err
 	}
-	rows, err := res.RowsAffected()
+	_, err = res.RowsAffected()
 	if err != nil {
 		log.Printf("Error %s when finding rows affected", err)
 		return err
 	}
-	log.Printf("%d products created ", rows)
+	log.Printf("request log created")
 	return nil
 }
 func NewDbBuilder() DbBuilderInterface {

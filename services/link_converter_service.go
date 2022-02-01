@@ -24,7 +24,6 @@ func (linkConverterService LinkConverterService) ConvertDeepToUrl(deepLinkReques
 	deepToUrlResponseModel := responses.DeepToUrlResponseModel{}
 
 	parsedUrlModel, err := linkConverterService.urlParser.Parse(deepLinkRequestModel.DeepLink)
-	linkConverterService.dbBuilder.DbConnection()
 	if err != nil {
 		linkConverterService.dbBuilder.InsertLogEvent(models.NewEvent(deepLinkRequestModel.DeepLink, ""))
 		return deepToUrlResponseModel, err
@@ -43,10 +42,12 @@ func (linkConverterService LinkConverterService) ConvertUrlToDeep(urlRequestMode
 	parsedUrlModel, err := linkConverterService.urlParser.Parse(urlRequestModel.Url)
 
 	if err != nil {
+		linkConverterService.dbBuilder.InsertLogEvent(models.NewEvent(urlToDeepResponseModel.DeepLink, ""))
 		return urlToDeepResponseModel, err
 	}
 
 	linkConverterService.urlBuilder.BuildDeepUrl(&urlToDeepResponseModel, parsedUrlModel)
+	linkConverterService.dbBuilder.InsertLogEvent(models.NewEvent(urlToDeepResponseModel.DeepLink, urlToDeepResponseModel.DeepLink))
 
 	return urlToDeepResponseModel, nil
 }
