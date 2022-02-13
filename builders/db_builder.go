@@ -9,37 +9,35 @@ import (
 )
 
 type DbBuilderInterface interface {
-	DbConnection() (*sql.DB, error)
+	DbConnection() error
 	InsertLogEvent(logEvent models.LogEventModel) error
 }
 
 type DbBuilder struct {
+	db *sql.DB
 }
 
-func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
+func (dbBuilder *DbBuilder) DbConnection() error {
 	db, err := sql.Open("mysql", "root:root@tcp(db:3306)/mysql")
 	if err != nil {
-		log.Printf("Error %s when opening db", err)
+		return err
 	}
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	res, err := db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+"my_scheme")
 	if err != nil {
-		log.Printf("Error %s when creating DB\n", err)
-		return nil, err
+		return err
 	}
 	_, err = res.RowsAffected()
 	if err != nil {
-		log.Printf("Error %s when fetching rows", err)
-		return nil, err
+		return err
 	}
 
 	db.Close()
 	db, err = sql.Open("mysql", "root:root@tcp(db:3306)/my_scheme")
 	if err != nil {
-		log.Printf("Error %s when opening DB", err)
-		return nil, err
+		return err
 	}
 	//defer db.Close()
 
@@ -51,15 +49,15 @@ func (dbBuilder *DbBuilder) DbConnection() (*sql.DB, error) {
 	defer cancelfunc()
 	err = db.PingContext(ctx)
 	if err != nil {
-		log.Printf("Errors %s pinging DB", err)
-		return nil, err
+		return err
 	}
 
 	err = dbBuilder.CreateLogsTable(db)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return db, nil
+	dbBuilder.db = db
+	return nil
 }
 
 func (dbBuilder *DbBuilder) CreateLogsTable(db *sql.DB) error {
@@ -69,26 +67,21 @@ func (dbBuilder *DbBuilder) CreateLogsTable(db *sql.DB) error {
 	defer cancelfunc()
 	res, err := db.ExecContext(ctx, query)
 	if err != nil {
-		log.Printf("Error %s when creating product table", err)
 		return err
 	}
 	_, err = res.RowsAffected()
 	if err != nil {
-		log.Printf("Error %s when getting rows affected", err)
 		return err
 	}
 	return nil
 }
 
 func (dbBuilder *DbBuilder) InsertLogEvent(logEvent models.LogEventModel) error {
-	db, err := dbBuilder.DbConnection()
-	if err != nil {
-		return err
-	}
+
 	query := "INSERT INTO logs(requestUrl, responseUrl) VALUES (?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
-	stmt, err := db.PrepareContext(ctx, query)
+	stmt, err := dbBuilder.db.PrepareContext(ctx, query)
 	if err != nil {
 		log.Printf("Error %s when preparing SQL statement", err)
 		return err

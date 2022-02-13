@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 	"go.uber.org/dig"
 	"linkconverter-api/builders"
 	"linkconverter-api/helpers"
@@ -15,6 +16,8 @@ import (
 func main() {
 	container := BuildContainer()
 	api := SetupRouter(*container)
+
+	SetupDb(*container)
 
 	err := container.Invoke(func(
 		config helpers.Config,
@@ -60,4 +63,17 @@ func SetupRouter(container dig.Container) *echo.Echo {
 	}
 
 	return api
+}
+
+func SetupDb(container dig.Container) {
+	err := container.Invoke(func(dbBuilder builders.DbBuilderInterface) {
+		err := dbBuilder.DbConnection()
+		if err != nil {
+			return
+		}
+		log.Info(err)
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
 }
