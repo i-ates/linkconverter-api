@@ -68,9 +68,6 @@ func SetupRouter(container dig.Container) *echo.Echo {
 func SetupDb(container dig.Container) {
 	err := container.Invoke(func(dbBuilder builders.DbBuilderInterface) {
 		err := dbBuilder.DbConnection()
-		if err != nil {
-			return
-		}
 		log.Info(err)
 	})
 	if err != nil {
