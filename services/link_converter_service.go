@@ -47,7 +47,8 @@ func (linkConverterService LinkConverterService) ConvertUrlToDeep(urlRequestMode
 	}
 
 	linkConverterService.urlBuilder.BuildDeepUrl(&urlToDeepResponseModel, parsedUrlModel)
-	linkConverterService.dbBuilder.InsertLogEvent(models.NewEvent(urlToDeepResponseModel.DeepLink, urlToDeepResponseModel.DeepLink))
+
+	linkConverterService.dbBuilder.InsertLogEvent(models.NewEvent(urlRequestModel.Url, urlToDeepResponseModel.DeepLink))
 
 	return urlToDeepResponseModel, nil
 }

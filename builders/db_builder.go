@@ -3,6 +3,7 @@ package builders
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"linkconverter-api/models"
 	"log"
 	"time"
@@ -77,7 +78,9 @@ func (dbBuilder *DbBuilder) CreateLogsTable(db *sql.DB) error {
 }
 
 func (dbBuilder *DbBuilder) InsertLogEvent(logEvent models.LogEventModel) error {
-
+	if dbBuilder.db == nil {
+		return errors.New("db is nil")
+	}
 	query := "INSERT INTO logs(requestUrl, responseUrl) VALUES (?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
