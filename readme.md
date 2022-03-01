@@ -1,4 +1,4 @@
-# Trendyol Deep Link Converter
+# Deep Link Converter
 Simple api project for deeplink challenge
 Also, you can find postman collection in postman folder for each request which are in case pdf.
 
